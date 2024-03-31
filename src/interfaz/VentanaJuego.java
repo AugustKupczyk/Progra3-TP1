@@ -2,11 +2,14 @@ package interfaz;
 
 import java.awt.EventQueue;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class VentanaJuego {
 
 	private JFrame frame;
+	private JButton BotonIniciarJuego;
+	private JButton BotonSalir;
 
 	/**
 	 * Launch the application.
@@ -38,6 +41,11 @@ public class VentanaJuego {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		BotonIniciarJuego = new JButton("Jugar!");
+		BotonIniciarJuego.setBorder(null);
+		BotonIniciarJuego.setBounds(170, 150, 89, 23);
+		frame.getContentPane().add(BotonIniciarJuego);
 	}
-
 }

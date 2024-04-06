@@ -41,7 +41,7 @@ public class LogicaMatriz {
 		
 		}
 	}
-	private boolean moveTiles (int direction) { //Mover Fichas 
+	private boolean moveTiles (Integer direction) { //Mover Fichas 
 		boolean moved = false;
 		switch(direction) {
 		case KeyEvent.VK_UP:
@@ -68,26 +68,60 @@ public class LogicaMatriz {
 		int actualValor = matTablero [fila][col];
 		matTablero [fila][col]= 0;
 		matTablero [newFila][newCol]*=2; 
-		
-		if (matTablero[newFila][newCol]==2048) {
-			isGameOver();
-		}
+		if (isGameOver()) {
+			JOptionPane.showMessageDialog(this,"Game Over","2048",JOptionPane.INFORMATION_MESSAGE);
+		}else {
 		generarFichas();
-		
+		}
 	}
-//	private boolean isGameOver() {
-//		return matTablero.gano()||matTablero.perdio();
-//	}
+	private boolean isGameOver() {
+		if (cantCeldasVacias() == matTablero.length || hayMovimientosPosibles(matTablero)) {	 
+		}
+	}
 	private int cantCeldasVacias () {
 		int cantVacias = 0;
 		for (int row=0; row < matTablero.length; row++) {
-			for (int col = 0; col < matTablero.length; col++ ) {
+			for (int col = 0; col < matTablero[0].length; col++ ) {
 				if (matTablero[row][col]==0) {
 					cantVacias++;
 				}
 			}
 		}
 		return cantVacias;
+	}
+	private boolean celda2048(Integer [][] tablero) {
+		boolean terminated= false;
+		for (int row=0; row < matTablero.length; row++) {
+			for (int col = 0; col < matTablero[0].length; col++ ) {
+				if (tablero[row][col]==2048) {
+					terminated = true; 
+				}
+			}
+			
+	}
+		return terminated;
+}
+	private boolean hayMovimientosPosibles(Integer[][] mat) {
+	    for (int row = 0; row < mat.length; row++) {
+	        for (int col = 0; col < mat[0].length; col++) {
+	            if (mat[row][col] == 0) {
+	                return true;
+	            }
+	            if (row > 0 && mat[row - 1][col] == mat[row][col]) {
+	                return true;
+	            }
+	            if (row < mat.length - 1 && mat[row + 1][col] == mat[row][col]) {
+	                return true;
+	            }
+	            if (col > 0 && mat[row][col - 1] == mat[row][col]) {
+	                return true;
+	            }
+	            if (col < mat[0].length - 1 && mat[row][col + 1] == mat[row][col]) {
+	                return true;
+	            }
+	        }
+	    }
+	    return false; 
 	}
 //OTRA FORMA 	
 //	int valor = (random.nextDouble() < 0.9) ? 2 : 4;

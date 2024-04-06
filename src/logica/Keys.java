@@ -28,6 +28,28 @@ public class Keys extends LogicaMatriz {
 		}
 		return moved; 
 	}
+	public boolean moveLeft(Integer [][] mat,boolean moved) {
+		for (int row = 0; row < mat.length; row++) {
+	        for (int col = 1; col < mat[0].length; col++) { 
+				if (mat [row][col]!=0) {
+					int k = col-1;
+					 while (k >= 0 && mat[row][k] == 0) { // Cambio aquí
+		                    k--;
+		                }
+					 if (k >= 0 && mat[row][k] == mat[row][col]) { // Cambio aquí
+		                    mat[row][k] *= 2;
+		                    mat[row][col] = 0;
+		                    moved = true;
+		                } else if (k + 1 != col) { // Cambio aquí
+		                    mat[row][k + 1] = mat[row][col]; // Cambio aquí
+		                    mat[row][col] = 0;
+		                    moved = true;
+				}
+			}
+		}
+	}
+		return moved;
+	}
 	public boolean moveDown(Integer [][] mat,boolean moved) {
 		for (int col = 0; col < mat.length ; col++) {
 			for (int row = mat[0].length-2 ; row >= 0 ; row--){

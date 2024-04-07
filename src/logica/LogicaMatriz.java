@@ -12,6 +12,7 @@ public class LogicaMatriz {
 	private Keys keyInstance;
 	private Integer dimension;
 	
+	
 	public LogicaMatriz (int dimension) {
 		this.dimension=4;
 		tablero = new VentanaJuego();
@@ -19,6 +20,18 @@ public class LogicaMatriz {
 		matTablero = new Integer [dimension][dimension]; 
 	}
 	
+	public boolean isGameOver() {
+		boolean game = false;
+		if (cantCeldasVacias() == matTablero.length || hayMovimientosPosibles(matTablero)) {
+			JOptionPane.showMessageDialog(null,"DERROTA");
+			game = true;
+		}else if(celda2048(matTablero)) {
+			JOptionPane.showMessageDialog(null,"VICTORIA");
+			game = true;
+		}
+		return game;
+	}
+//GENERA LAS FICHAS EN TIEMPO REAL 
 	private void generarFichas () {
 		int celdasVacias= cantCeldasVacias();
 		if (celdasVacias == 0) {
@@ -41,7 +54,8 @@ public class LogicaMatriz {
 		
 		}
 	}
-	private boolean moveTiles (Integer direction) { //Mover Fichas 
+//MOVER FICHAS 
+	private void moveTiles (Integer direction) { //Mover Fichas 
 		boolean moved = false;
 		switch(direction) {
 		case KeyEvent.VK_UP:
@@ -60,24 +74,13 @@ public class LogicaMatriz {
 		if (moved) {
 			generarFichas();
 			if (isGameOver()) {
-				JOptionPane.showMessageDialog(this, "GameOver","2048");
+				return;
 			}
 		}
+
 	}
-	private void combinarFichas(int fila, int col, int newFila, int newCol) {
-		int actualValor = matTablero [fila][col];
-		matTablero [fila][col]= 0;
-		matTablero [newFila][newCol]*=2; 
-		if (isGameOver()) {
-			JOptionPane.showMessageDialog(this,"Game Over","2048",JOptionPane.INFORMATION_MESSAGE);
-		}else {
-		generarFichas();
-		}
-	}
-	private boolean isGameOver() {
-		if (cantCeldasVacias() == matTablero.length || hayMovimientosPosibles(matTablero)) {	 
-		}
-	}
+
+	
 	private int cantCeldasVacias () {
 		int cantVacias = 0;
 		for (int row=0; row < matTablero.length; row++) {
@@ -130,6 +133,17 @@ public class LogicaMatriz {
 //		col = random.nextInt(4);
 //	}while (matTablero[fila][col]!= 0 ); //tablero.Lugar == null
 //	matTablero[fila][col]= valor;
+	
+//	private void combinarFichas(int fila, int col, int newFila, int newCol) {
+//	int actualValor = matTablero [fila][col];
+//	matTablero [fila][col]= 0;
+//	matTablero [newFila][newCol]*=2; 
+//	if (isGameOver()) {
+//		JOptionPane.showMessageDialog(this,"Game Over","2048",JOptionPane.INFORMATION_MESSAGE);
+//	}else {
+//	generarFichas();
+//	}
+//}
 }
 
 

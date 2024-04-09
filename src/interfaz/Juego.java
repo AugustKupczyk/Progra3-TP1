@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.border.LineBorder;
+import logica.LogicaMatriz;
+import objeto.Matriz;
 
 public class Juego {
 
@@ -12,8 +14,12 @@ public class Juego {
 	private JButton[][] gridButtons;
 	private JLabel scoreLabel;
 	private JButton restartButton;
+	private JTextField[][] camposDeTexto;
+	private LogicaMatriz utilidades = new LogicaMatriz();
+	private Matriz matriz;
 
-	public Juego() {
+	public Juego(Matriz matriz) {
+		this.matriz = matriz;
 		initialize();
 	}
 
@@ -37,8 +43,6 @@ public class Juego {
 
 		JButton square = new JButton();
 		square.setBorder(new LineBorder(Color.BLACK)); // Borde negro para separar los cuadrados
-
-	
 
 		// Crear y agregar botones de dirección
 		JButton upButton = new JButton("↑");

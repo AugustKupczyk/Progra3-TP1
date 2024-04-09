@@ -6,10 +6,12 @@ public class Matriz {
     private int dimension;
     private int[][] cuadricula;
     private Random rand;
+    private int tamano;
 
     public Matriz(int dimension) {
         this.dimension = dimension;
         this.cuadricula = new int[dimension][dimension];
+        this.tamano= cuadricula.length;
         this.rand = new Random();
         inicializarMatriz();
     }
@@ -31,6 +33,9 @@ public class Matriz {
         }
         // Agregar un número inicial aleatorio
         agregarNumeroAleatorio();
+    }
+    public int getMatLength() {
+    	return tamano;
     }
 
     public void agregarNumeroAleatorio() {

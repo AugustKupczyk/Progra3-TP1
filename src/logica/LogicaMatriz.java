@@ -4,48 +4,42 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 import javax.swing.JOptionPane;
 import interfaz.VentanaJuego;
+import objeto.Matriz;
 
 public class LogicaMatriz {
-	private Integer [][] matTablero; //TENDRIA QUE CONTENER LOS LABELS
-	private Random random;
-	private VentanaJuego tablero;
 	private Keys keyInstance;
-	private Integer dimension;
+	private Random random;
 	
-	
-	public LogicaMatriz (int dimension) {
-		this.dimension=4;
-		tablero = new VentanaJuego();
-		keyInstance = new Keys(dimension);
-		matTablero = new Integer [dimension][dimension]; 
+	public Matriz generarMatriz (Integer dimension) {
+		return new Matriz (dimension);
 	}
 	
-	public boolean isGameOver() {
+	public boolean isGameOver(Matriz m) {
 		boolean game = false;
-		if (cantCeldasVacias() == matTablero.length || hayMovimientosPosibles(matTablero)) {
+		if (cantCeldasVacias(m) == m.getMatLength() || hayMovimientosPosibles(m)) {
 			JOptionPane.showMessageDialog(null,"DERROTA");
 			game = true;
-		}else if(celda2048(matTablero)) {
+		}else if(celda2048(m)) {
 			JOptionPane.showMessageDialog(null,"VICTORIA");
 			game = true;
 		}
 		return game;
 	}
 //GENERA LAS FICHAS EN TIEMPO REAL 
-	private void generarFichas () {
-		int celdasVacias= cantCeldasVacias();
+	private void generarFichas (Matriz m) {
+		int celdasVacias= cantCeldasVacias(m);
 		if (celdasVacias == 0) {
 			return;
 		}else {
 		int indice = random.nextInt(celdasVacias)+1;
 		celdasVacias = 0;
 		
-		for (int row = 0; row < matTablero.length; row++ ) {
-			for (int col = 0 ; col <matTablero[0].length;col++) {
+		for (int row = 0; row < m.getMatLength(); row++ ) {
+			for (int col = 0 ; col <m.getCuadricula()[row].length;col++) {
 				celdasVacias++;
 				if (celdasVacias == indice) {
 					int valor = (random.nextDouble() < 0.9) ? 2 : 4;
-					matTablero[row][col]=valor;
+					m.getCuadricula()[row][col]=valor;
 					return;
 				}
 			}
@@ -54,26 +48,26 @@ public class LogicaMatriz {
 		
 		}
 	}
-//MOVER FICHAS 
-	private void moveTiles (Integer direction) { //Mover Fichas 
+//MOVER FICHAS (debo seguir modificando para que reciba los movimientos)
+	private void moveTiles (Matriz m) { //Mover Fichas 
 		boolean moved = false;
 		switch(direction) {
 		case KeyEvent.VK_UP:
-			moved = keyInstance.moveUp(matTablero,moved);
+			moved = keyInstance.moveUp(m.getCuadricula(),moved);
 			break;
 		case KeyEvent.VK_DOWN:
-			moved = keyInstance.moveDown(matTablero,moved);
+			moved = keyInstance.moveDown(m.getCuadricula(),moved);
 			break;
 		case KeyEvent.VK_LEFT:
-			moved = keyInstance.moveLeft(matTablero,moved);
+			moved = keyInstance.moveLeft(m.getCuadricula(),moved);
 			break;
 		case KeyEvent.VK_RIGHT:
-			moved = keyInstance.moveRight(matTablero,moved);
+			moved = keyInstance.moveRight(m.getCuadricula(),moved);
 			break;
 		}
 		if (moved) {
-			generarFichas();
-			if (isGameOver()) {
+			generarFichas(m);
+			if (isGameOver(m)) {
 				return;
 			}
 		}
@@ -81,22 +75,22 @@ public class LogicaMatriz {
 	}
 
 	
-	private int cantCeldasVacias () {
+	private int cantCeldasVacias (Matriz m) {
 		int cantVacias = 0;
-		for (int row=0; row < matTablero.length; row++) {
-			for (int col = 0; col < matTablero[0].length; col++ ) {
-				if (matTablero[row][col]==0) {
+		for (int row = 0; row < m.getMatLength(); row++ ) {
+			for (int col = 0 ; col <m.getCuadricula()[row].length;col++) {
+				if (m.getCuadricula()[row][col]==0) {
 					cantVacias++;
 				}
 			}
 		}
 		return cantVacias;
 	}
-	private boolean celda2048(Integer [][] tablero) {
+	private boolean celda2048(Matriz m) {
 		boolean terminated= false;
-		for (int row=0; row < matTablero.length; row++) {
-			for (int col = 0; col < matTablero[0].length; col++ ) {
-				if (tablero[row][col]==2048) {
+		for (int row = 0; row < m.getMatLength(); row++ ) {
+			for (int col = 0 ; col <m.getCuadricula()[row].length;col++) {
+				if (m.getCuadricula()[row][col]==2048) {
 					terminated = true; 
 				}
 			}
@@ -104,22 +98,23 @@ public class LogicaMatriz {
 	}
 		return terminated;
 }
-	private boolean hayMovimientosPosibles(Integer[][] mat) {
-	    for (int row = 0; row < mat.length; row++) {
-	        for (int col = 0; col < mat[0].length; col++) {
-	            if (mat[row][col] == 0) {
+//VERIFICA SI HAY MOVIMIENTOS POSIBLES RESTANTES EN EL JUEGO, TRUE SI HAY ESPACIO EN EL TABLERO O SI HAY 2 NUMEROS ADYACENTES QUE SON IGUALES. 
+	private boolean hayMovimientosPosibles(Matriz m) {
+		for (int row = 0; row < m.getMatLength(); row++ ) {
+			for (int col = 0 ; col <m.getCuadricula()[row].length;col++) {
+	            if (m.getCuadricula()[row][col] == 0) {
 	                return true;
 	            }
-	            if (row > 0 && mat[row - 1][col] == mat[row][col]) {
+	            if (row > 0 && m.getCuadricula()[row - 1][col] == m.getCuadricula()[row][col]) {
 	                return true;
 	            }
-	            if (row < mat.length - 1 && mat[row + 1][col] == mat[row][col]) {
+	            if (row <m.getCuadricula().length - 1 && m.getCuadricula()[row + 1][col] == m.getCuadricula()[row][col]) {
 	                return true;
 	            }
-	            if (col > 0 && mat[row][col - 1] == mat[row][col]) {
+	            if (col > 0 && m.getCuadricula()[row][col - 1] == m.getCuadricula()[row][col]) {
 	                return true;
 	            }
-	            if (col < mat[0].length - 1 && mat[row][col + 1] == mat[row][col]) {
+	            if (col < m.getCuadricula()[0].length - 1 && m.getCuadricula()[row][col + 1] == m.getCuadricula()[row][col]) {
 	                return true;
 	            }
 	        }
